@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="星漫乐理知识 - 最全面的音乐乐理知识百科，15大模块119个主题，支持APK下载与网页在线体验">
+  <title>星漫乐理知识 | APK下载与网页体验</title>
+  <style>
+    /* ===================== CSS变量 ===================== */
+    :root {
+      --bg: #0a0a12;
+      --bg2: #12121e;
+      --bg3: #1a1a2e;
+      --ink: #e8e8f0;
+      --muted: #8888a0;
+      --muted2: #5a5a72;
+      --rule: rgba(255,255,255,0.08);
+      --accent: #6366f1;
+      --accent2: #ec4899;
+      --accent3: #f59e0b;
+      --glass-bg: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.08);
+      --glass-blur: 16px;
+      --shadow: 0 8px 32px rgba(0,0,0,0.3);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-lg: 24px;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans CJK SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    }
+
+    /* ===================== 重置 ===================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; cursor: pointer; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    ul, ol { list-style: none; }
+    img { max-width: 100%; }
+    svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    /* ===================== 背景装饰光球 ===================== */
+    .bg-orbs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: orbFloat 12s ease-in-out infinite;
+    }
+    .orb-1 { width: 400px; height: 400px; background: var(--accent); top: -100px; left: -100px; }
+    .orb-2 { width: 350px; height: 350px; background: var(--accent2); top: 30%; right: -100px; animation-delay: 3s; }
+    .orb-3 { width: 300px; height: 300px; background: var(--accent3); bottom: -100px; left: 30%; animation-delay: 6s; }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      33% { transform: translate(40px,-40px) scale(1.1); }
+      66% { transform: translate(-30px,30px) scale(0.95); }
+    }
+
+    /* ===================== 顶部导航 ===================== */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      background: rgba(10,10,18,0.8);
+      backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+      border-bottom: 1px solid var(--glass-border);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 16px;
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-right: auto;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.4);
+    }
+    .logo-icon svg { width: 20px; height: 20px; }
+    .header-nav {
+      display: flex;
+      gap: 28px;
+    }
+    .header-nav a {
+      font-size: 0.9rem;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .header-nav a:hover { color: var(--ink); }
+    .header-cta {
+      display: flex;
+      gap: 8px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn svg { width: 18px; height: 18px; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(99,102,241,0.5); }
+    .btn-glass {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+      color: var(--ink);
+    }
+    .btn-glass:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-lg { padding: 14px 32px; font-size: 1rem; }
+
+    /* 移动端菜单按钮 */
+    .menu-toggle {
+      display: none;
+      width: 40px; height: 40px;
+      border-radius: var(--radius-sm);
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+    }
+    .menu-toggle svg { width: 22px; height: 22px; }
+
+    /* ===================== 主内容 ===================== */
+    .main {
+      padding-top: 64px;
+    }
+
+    /* ===================== Hero 区域 ===================== */
+    .hero {
+      position: relative;
+      padding: 80px 24px 60px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+      font-size: 0.8125rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .hero-badge .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+    .hero-title {
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .hero-actions .btn { padding: 16px 36px; font-size: 1.0625rem; }
+
+    /* Hero 统计数据 */
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ===================== 通用 Section ===================== */
+    .section {
+      padding: 80px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .section-desc {
+      color: var(--muted);
+      font-size: 1.0625rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ===================== 功能特性网格 ===================== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      padding: 32px 28px;
+      border-radius: var(--radius);
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s;
+    }
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--feat-color);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+    }
+    .feature-icon {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      background: var(--feat-bg);
+      color: var(--feat-color);
+    }
+    .feature-icon svg { width: 28px; height: 28px; }
+    .feature-card h3 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ===================== 学习模块展示 ===================== */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .module-tag {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      transition: all 0.2s;
+    }
+    .module-tag:hover {
+      border-color: var(--mod-color);
+      transform: translateX(4px);
+    }
+    .module-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--mod-color);
+      flex-shrink: 0;
+      box-shadow: 0 0 8px var(--mod-color);
+    }
+    .module-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .module-count {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--muted2);
+      font-family: var(--mono);
+    }
+
+    /* ===================== 亮点区域 ===================== */
+    .highlights {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .highlight-card {
+      text-align: center;
+      padding: 40px 24px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, var(--glass-bg), transparent);
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s;
+    }
+    .highlight-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .highlight-icon {
+      width: 64px; height: 64px;
+      margin: 0 auto 20px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(99,102,241,0.3);
+    }
+    .highlight-icon svg { width: 32px; height: 32px; }
+    .highlight-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .highlight-card p {
+      color: var(--muted);
+      font-size: 0.9375rem;
+    }
+
+    /* ===================== 下载区域 ===================== */
+    .download-section {
+      padding: 100px 24px;
+      text-align: center;
+      position: relative;
+    }
+    .download-card {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 56px 40px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, var(--bg3), var(--bg2));
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .download-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+    }
+    .download-icon {
+      width: 80px; height: 80px;
+      margin: 0 auto 24px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 12px 36px rgba(99,102,241,0.4);
+    }
+    .download-icon svg { width: 40px; height: 40px; }
+    .download-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .download-version {
+      color: var(--muted);
+      font-size: 0.9375rem;
+      margin-bottom: 32px;
+    }
+    .download-version .ver-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 10px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+    .download-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .download-buttons .btn { padding: 16px 36px; font-size: 1.0625rem; }
+    .download-info {
+      margin-top: 24px;
+      font-size: 0.8125rem;
+      color: var(--muted2);
+    }
+    .download-info span { margin: 0 8px; }
+
+    /* ===================== 页脚 ===================== */
+    .footer {
+      padding: 48px 24px 32px;
+      border-top: 1px solid var(--rule);
+      background: var(--bg2);
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .footer-brand .logo-icon { width: 32px; height: 32px; }
+    .footer-brand .logo-icon svg { width: 18px; height: 18px; }
+    .footer-info {
+      font-size: 0.8125rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .footer-info .sep { margin: 0 8px; opacity: 0.5; }
+    .footer-badge {
+      padding: 4px 14px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--accent);
+    }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding-top: 20px;
+      border-top: 1px solid var(--rule);
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted2);
+    }
+
+    /* ===================== 响应式 ===================== */
+    @media (max-width: 768px) {
+      .header { padding: 0 16px; gap: 8px; }
+      .header-nav { display: none; }
+      .menu-toggle { display: flex; }
+      .header-cta .btn-glass { display: none; }
+
+      .hero { padding: 60px 16px 40px; }
+      .hero-stats { gap: 24px; }
+      .stat-num { font-size: 1.75rem; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .hero-actions .btn { justify-content: center; }
+
+      .section { padding: 56px 16px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .highlights { grid-template-columns: 1fr; gap: 16px; }
+      .highlight-card { padding: 28px 20px; }
+
+      .download-section { padding: 60px 16px; }
+      .download-card { padding: 40px 24px; }
+      .download-title { font-size: 1.5rem; }
+      .download-buttons { flex-direction: column; }
+      .download-buttons .btn { justify-content: center; }
+
+      .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+      .footer-info { font-size: 0.75rem; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title { font-size: 2.25rem; }
+      .modules-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ===================== 滚动条 ===================== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted2); }
+
+    /* ===================== 选中文本 ===================== */
+    ::selection { background: rgba(99,102,241,0.3); color: var(--ink); }
+
+    /* ===================== 入场动画 ===================== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===================== 移动端展开菜单 ===================== */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      background: rgba(10,10,18,0.95);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border-bottom: 1px solid var(--glass-border);
+      z-index: 99;
+      padding: 16px;
+      flex-direction: column;
+      gap: 8px;
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s;
+    }
+    .mobile-nav.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+    .mobile-nav a {
+      display: block;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      color: var(--muted);
+      font-size: 0.9375rem;
+      transition: all 0.2s;
+    }
+    .mobile-nav a:hover { background: var(--glass-bg); color: var(--ink); }
+    @media (min-width: 769px) { .mobile-nav { display: none !important; } }
+  </style>
+</head>
+<body>
+  <!-- 背景装饰光球 -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- 顶部导航 -->
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      </div>
+      <span>星漫乐理</span>
+    </div>
+    <nav class="header-nav">
+      <a href="#features">功能特性</a>
+      <a href="#modules">学习模块</a>
+      <a href="#highlights">应用亮点</a>
+      <a href="#download">下载</a>
+    </nav>
+    <div class="header-cta">
+      <a href="xmylzs.html" class="btn btn-glass">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        网页体验
+      </a>
+      <a href="https://xmylzs.netlify.app/xmylzs.apk" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        下载 APP
+      </a>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="菜单">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </header>
+
+  <!-- 移动端展开菜单 -->
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#features">功能特性</a>
+    <a href="#modules">学习模块</a>
+    <a href="#highlights">应用亮点</a>
+    <a href="#download">下载</a>
+    <a href="xmylzs.html">网页体验</a>
+  </nav>
+
+  <main class="main">
+    <!-- Hero 区域 -->
+    <section class="hero">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <span>免费开源 · 离线可用 · 持续更新</span>
+      </div>
+      <h1 class="hero-title">
+        星漫<span class="gradient-text">乐理知识</span>
+      </h1>
+      <p class="hero-subtitle">
+        最全面的音乐乐理知识百科，涵盖 15 大模块、119 个主题，从基础入门到精通。
+        内置虚拟钢琴、乐理测验、学习路径等互动工具，让每个人都能看懂音乐的语言。
+      </p>
+      <div class="hero-actions">
+        <a href="xmylzs.apk" class="btn btn-primary btn-lg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          下载 Android APK
+        </a>
+        <a href="xmylzs.html" class="btn btn-glass btn-lg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          立即网页体验
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num">15</div>
+          <div class="stat-label">学习模块</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">119</div>
+          <div class="stat-label">知识主题</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">5</div>
+          <div class="stat-label">学习路径</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">11</div>
+          <div class="stat-label">成就系统</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 功能特性 -->
+    <section class="section" id="features">
+      <div class="section-header fade-up">
+        <h2 class="section-title">核心功能</h2>
+        <p class="section-desc">互动式学习工具，边学边练，让乐理知识不再枯燥</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card fade-up" style="--feat-color:#6366f1;--feat-bg:rgba(99,102,241,0.12)">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <h3>系统化知识库</h3>
+          <p>15 大模块、119 个主题，涵盖基础乐理、和声学、练耳视唱、乐器知识、音乐史等全方位内容</p>
+        </div>
+        <div class="feature-card fade-up" style="--feat-color:#ec4899;--feat-bg:rgba(236,72,153,0.12)">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="1"/><path d="M7 6v8M11 6v8M15 6v8M19 6v8"/><path d="M2 14h20"/></svg>
+          </div>
+          <h3>虚拟钢琴</h3>
+          <p>内置互动钢琴键盘，点击琴键试听各种音程与和弦，支持自动播放与音名显示</p>
+        </div>
+        <div class="feature-card fade-up" style="--feat-color:#f59e0b;--feat-bg:rgba(245,158,11,0.12)">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h3>乐理测验</h3>
+          <p>随机抽题检验乐理水平，覆盖所有知识模块，答题后立即查看解析与正确答案</p>
+        </div>
+        <div class="feature-card fade-up" style="--feat-color:#10b981;--feat-bg:rgba(16,185,129,0.12)">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+          </div>
+          <h3>学习路径</h3>
+          <p>5 条推荐学习路径，按难度循序渐进，从零基础到精通，清晰的学习进度追踪</p>
+        </div>
+        <div class="feature-card fade-up" style="--feat-color:#8b5cf6;--feat-bg:rgba(139,92,246,0.12)">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </div>
+          <h3>知识图谱</h3>
+          <p>可视化知识关联结构，直观展示各模块学习进度，快速定位薄弱环节</p>
+        </div>
+        <div class="feature-card fade-up" style="--feat-color:#3b82f6;--feat-bg:rgba(59,130,246,0.12)">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <h3>学习仪表盘</h3>
+          <p>实时统计学习进度、完成数量、收藏数量，成就系统激励持续学习</p>
+        </div>
+        <div class="feature-card fade-up" style="--feat-color:#ef4444;--feat-bg:rgba(239,68,68,0.12)">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <h3>智能搜索</h3>
+          <p>全文搜索所有乐理知识，关键词高亮显示，快速定位所需内容</p>
+        </div>
+        <div class="feature-card fade-up" style="--feat-color:#06b6d4;--feat-bg:rgba(6,182,212,0.12)">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+          </div>
+          <h3>多主题切换</h3>
+          <p>5 套精心设计的配色主题：暗色、亮色、午夜蓝、森林绿、日落橙，随心切换</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 学习模块 -->
+    <section class="section" id="modules">
+      <div class="section-header fade-up">
+        <h2 class="section-title">15 大学习模块</h2>
+        <p class="section-desc">从基础乐理到专业作曲，全方位覆盖音乐理论知识体系</p>
+      </div>
+      <div class="modules-grid fade-up">
+        <div class="module-tag" style="--mod-color:#6366f1"><span class="module-dot"></span><span class="module-name">基础乐理</span><span class="module-count">8 主题</span></div>
+        <div class="module-tag" style="--mod-color:#ec4899"><span class="module-dot"></span><span class="module-name">节奏节拍</span><span class="module-count">6 主题</span></div>
+        <div class="module-tag" style="--mod-color:#f59e0b"><span class="module-dot"></span><span class="module-name">和声学</span><span class="module-count">9 主题</span></div>
+        <div class="module-tag" style="--mod-color:#10b981"><span class="module-dot"></span><span class="module-name">练耳视唱</span><span class="module-count">7 主题</span></div>
+        <div class="module-tag" style="--mod-color:#8b5cf6"><span class="module-dot"></span><span class="module-name">曲式体裁</span><span class="module-count">6 主题</span></div>
+        <div class="module-tag" style="--mod-color:#3b82f6"><span class="module-dot"></span><span class="module-name">乐器知识</span><span class="module-count">12 主题</span></div>
+        <div class="module-tag" style="--mod-color:#ef4444"><span class="module-dot"></span><span class="module-name">音乐史</span><span class="module-count">8 主题</span></div>
+        <div class="module-tag" style="--mod-color:#06b6d4"><span class="module-dot"></span><span class="module-name">作曲编曲</span><span class="module-count">9 主题</span></div>
+        <div class="module-tag" style="--mod-color:#a855f7"><span class="module-dot"></span><span class="module-name">数字制作</span><span class="module-count">8 主题</span></div>
+        <div class="module-tag" style="--mod-color:#14b8a6"><span class="module-dot"></span><span class="module-name">声学原理</span><span class="module-count">6 主题</span></div>
+        <div class="module-tag" style="--mod-color:#f97316"><span class="module-dot"></span><span class="module-name">音乐分析</span><span class="module-count">7 主题</span></div>
+        <div class="module-tag" style="--mod-color:#84cc16"><span class="module-dot"></span><span class="module-name">世界音乐</span><span class="module-count">10 主题</span></div>
+        <div class="module-tag" style="--mod-color:#e11d48"><span class="module-dot"></span><span class="module-name">音乐教育</span><span class="module-count">7 主题</span></div>
+        <div class="module-tag" style="--mod-color:#0ea5e9"><span class="module-dot"></span><span class="module-name">进阶理论</span><span class="module-count">8 主题</span></div>
+        <div class="module-tag" style="--mod-color:#d946ef"><span class="module-dot"></span><span class="module-name">高级理论</span><span class="module-count">8 主题</span></div>
+      </div>
+    </section>
+
+    <!-- 应用亮点 -->
+    <section class="section" id="highlights">
+      <div class="section-header fade-up">
+        <h2 class="section-title">为什么选择星漫乐理</h2>
+        <p class="section-desc">零依赖、纯原生、完全免费，为学习者打造的优质工具</p>
+      </div>
+      <div class="highlights">
+        <div class="highlight-card fade-up">
+          <div class="highlight-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <h3>完全免费</h3>
+          <p>所有功能完全免费开放，无任何内购、广告或收费项目，纯粹为学习而生</p>
+        </div>
+        <div class="highlight-card fade-up">
+          <div class="highlight-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3>离线可用</h3>
+          <p>纯前端实现，无需网络连接，所有数据本地存储，随时随地学习乐理知识</p>
+        </div>
+        <div class="highlight-card fade-up">
+          <div class="highlight-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3>纯原生实现</h3>
+          <p>零依赖、零框架，纯原生 HTML/CSS/JavaScript 开发，加载快速、运行流畅</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 下载区域 -->
+    <section class="download-section" id="download">
+      <div class="download-card fade-up">
+        <div class="download-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <h2 class="download-title">下载星漫乐理知识</h2>
+        <p class="download-version">
+          版本 1.0.0 <span class="ver-badge">最新版</span>
+        </p>
+        <div class="download-buttons">
+          <a href="https://xmylzs.netlify.app/xmylzs.apk" class="btn btn-primary btn-lg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            下载 Android APK
+          </a>
+          <a href="xmylzs.html" class="btn btn-glass btn-lg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            网页在线体验
+          </a>
+        </div>
+        <div class="download-info">
+          <span>支持 Android 5.0+</span>
+          <span>·</span>
+          <span>APK 大小约 2MB</span>
+          <span>·</span>
+          <span>无需网络即可使用</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </div>
+        <span>星漫乐理</span>
+      </div>
+      <div class="footer-info">
+        <span>开发者：不见桃花不见秋</span>
+        <span class="sep">·</span>
+        <span>开发时间：2026年8月10日</span>
+      </div>
+      <span class="footer-badge">v1.0.0</span>
+    </div>
+    <div class="footer-bottom">
+      © 2026 星漫乐理知识 · 音乐乐理知识百科全书 · 仅供学习交流使用
+    </div>
+  </footer>
+
+  <script>
+  // ===================== 移动端菜单切换 =====================
+  (function() {
+    var toggle = document.getElementById('menuToggle');
+    var nav = document.getElementById('mobileNav');
+    if (toggle && nav) {
+      toggle.addEventListener('click', function() {
+        nav.classList.toggle('open');
+      });
+      // 点击菜单项后关闭
+      nav.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', function() {
+          nav.classList.remove('open');
+        });
+      });
+    }
+  })();
+
+  // ===================== 滚动入场动画 =====================
+  (function() {
+    var elements = document.querySelectorAll('.fade-up');
+    function checkVisibility() {
+      elements.forEach(function(el) {
+        var rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 60) {
+          el.classList.add('visible');
+        }
+      });
+    }
+    window.addEventListener('scroll', checkVisibility, { passive: true });
+    window.addEventListener('resize', checkVisibility);
+    // 初始检查
+    checkVisibility();
+  })();
+
+  // ===================== 平滑滚动 =====================
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        var offset = 80; // 导航栏高度
+        var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  });
+  </script>
+</body>
+</html>
