@@ -2042,6 +2042,121 @@
     .device-mobile .key-label { font-size: 0.55rem; }
     .device-mobile .category-header { flex-wrap: wrap; }
     .device-mobile .cat-header-icon { width: 48px; height: 48px; }
+
+    /* ===================== 可视化图解区块（app-charts） ===================== */
+    .mt-charts-section {
+      margin: 1.5rem 0;
+      padding: 0;
+    }
+    .mt-charts-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .mt-charts-header svg { width: 22px; height: 22px; }
+    .mt-charts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media (min-width: 768px) {
+      .mt-charts-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .mt-chart-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      overflow: hidden;
+    }
+    .mt-chart-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .mt-chart-card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mt-chart-card-title::before {
+      content: '';
+      width: 3px;
+      height: 16px;
+      background: var(--accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .mt-chart-card-body {
+      overflow-x: auto;
+      padding: 0.5rem 0;
+      min-height: 40px;
+    }
+    .mt-chart-card-body svg {
+      width: 100% !important;
+      height: auto !important;
+      max-width: 100%;
+      display: block;
+    }
+    .mt-charts-header svg {
+      width: 22px !important;
+      height: 22px !important;
+      flex-shrink: 0;
+    }
+    .mt-chart-card-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
+    .mt-chart-svg text { font-family: -apple-system, 'Segoe UI', 'Noto Sans CJK SC', sans-serif; }
+    /* 信息卡片网格 */
+    .mt-info-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    @media (min-width: 480px) {
+      .mt-info-cards-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .mt-info-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 10px 12px;
+      background: var(--bg2);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-sm);
+    }
+    .mt-info-card-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .mt-info-card-body { flex: 1; min-width: 0; }
+    .mt-info-card-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .mt-info-card-text {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    /* 移动端图表适配 */
+    .device-mobile .mt-charts-grid { grid-template-columns: 1fr; }
+    .device-mobile .mt-chart-card { padding: 0.875rem; }
+    .device-mobile .mt-chart-card-body { overflow-x: auto; }
   </style>
 </head>
 <body>
@@ -2163,6 +2278,14 @@
   <script src="assets/app-theme.js"></script>
   <script src="assets/app-router.js"></script>
   <script src="assets/app-render.js"></script>
+
+  <!-- 可视化图表系统（纯 SVG/CSS 代码构建，不使用外部图片） -->
+  <script src="assets/app-charts.js"></script>
+  <script src="assets/app-chart-maps-1.js"></script>
+  <script src="assets/app-chart-maps-2.js"></script>
+  <script src="assets/app-chart-maps-3.js"></script>
+  <script src="assets/app-chart-render.js"></script>
+
   <script src="assets/app-quiz.js"></script>
   <script src="assets/app-piano.js"></script>
   <script src="assets/app-search.js"></script>
