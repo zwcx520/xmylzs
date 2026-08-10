@@ -166,6 +166,7 @@ App.renderTopic = function(topicId) {
               '<div class="tip-content"><strong>学习提示</strong><p>' + sec.tip + '</p></div></div>' : '') +
           '</section>';
         }).join('') +
+        (typeof App.renderTopicCharts === 'function' ? App.renderTopicCharts(topic.id) : '') +
         '<div class="key-points-box">' +
           '<h3 class="kp-title">' + App.ICONS.check + ' 核心要点</h3>' +
           '<ul class="kp-list">' + topic.keyPoints.map(function(p) { return '<li>' + p + '</li>'; }).join('') + '</ul>' +

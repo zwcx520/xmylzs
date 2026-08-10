@@ -137,8 +137,8 @@ App.renderFatalError = function(err) {
   main.innerHTML =
     '<div style="max-width:560px;margin:80px auto;padding:32px;text-align:center;font-family:sans-serif;">' +
       '<div style="font-size:48px;margin-bottom:16px;">🎵</div>' +
-      '<h2 style="font-size:1.25rem;margin-bottom:8px;">页面加载遇到问题</h2>' +
-      '<p style="color:#888;font-size:0.9rem;margin-bottom:20px;">可能是浏览器兼容性或本地访问限制导致。请尝试使用最新版 Chrome / Edge / Firefox 浏览器，或通过本地 HTTP 服务器访问。</p>' +
+      '<h2 style="font-size:1.25rem;margin-bottom:8px;">页面加载出错</h2>' +
+      '<p style="color:#888;font-size:0.9rem;margin-bottom:20px;">可能是页面兼容性或加载限制导致。请尝试退出重新加载！</p>' +
       '<button onclick="location.reload()" style="padding:10px 24px;border-radius:8px;background:#6366f1;color:#fff;border:none;cursor:pointer;font-size:0.9rem;">重新加载</button>' +
       '<p style="color:#666;font-size:0.75rem;margin-top:24px;word-break:break-all;">错误信息：' + (err && err.message ? err.message : String(err)) + '</p>' +
     '</div>';
