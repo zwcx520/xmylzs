@@ -11,13 +11,20 @@ App.getHashRoute = function() {
 };
 
 App.navigate = function(page, topicId) {
-  if (topicId) {
-    location.hash = page + '/' + topicId;
+  var hash = topicId ? (page + '/' + topicId) : (page || 'home');
+  // 使用 replaceState 替换当前历史记录,避免返回时逐级回退上级页面
+  if (window.history && history.replaceState) {
+    history.replaceState(null, '', '#' + hash);
+    if (App.isMobile()) App.closeSidebar();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // replaceState 不触发 hashchange,需手动处理路由
+    App.handleRoute();
   } else {
-    location.hash = page || 'home';
+    // 旧浏览器回退:仍用 hash 跳转
+    location.hash = hash;
+    if (App.isMobile()) App.closeSidebar();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  if (App.isMobile()) App.closeSidebar();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 // 安全渲染：单个页面渲染失败时自动 fallback 到首页，避免白屏
