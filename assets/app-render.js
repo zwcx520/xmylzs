@@ -305,7 +305,7 @@ App.renderSidebar = function() {
   sidebar.innerHTML =
     '<div class="sidebar-header">' +
       '<div class="sidebar-logo" onclick="App.navigate(\'home\')">' +
-        '<div class="logo-icon">' + App.ICONS.note + '</div>' +
+        
         '<span class="logo-text">目录列表</span>' +
       '</div>' +
     '</div>' +
